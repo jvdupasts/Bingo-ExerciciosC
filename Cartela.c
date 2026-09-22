@@ -5,14 +5,12 @@
 #define LINHAS          5
 #define COLUNAS         5
 #define MAX_CARTELAS    100
-#define NUMEROS_POR_COL 15   /* cada coluna tem uma faixa de 15 numeros      */
-#define LINHA_LIVRE     2    /* linha 3 (indice 2) -> espaco livre           */
-#define ESPACO_LIVRE    0    /* valor que representa o espaco livre          */
-#define MAX_TENTATIVAS  1000 /* limite de tentativas para evitar repeticao   */
+#define NUMEROS_POR_COL 15   
+#define LINHA_LIVRE     2    
+#define ESPACO_LIVRE    0    
+#define MAX_TENTATIVAS  1000 
  
-/* ---------------------------------------------------------------------------
- *  Enumeracao das colunas da cartela
- * ------------------------------------------------------------------------ */
+
 typedef enum
 {
     COLUNA_B = 0,
@@ -23,20 +21,16 @@ typedef enum
     TOTAL_COLUNAS
 } Coluna;
  
-/* Strings com os nomes das colunas (indexadas pela enumeracao) */
+
 static const char *NOMES_COLUNAS[TOTAL_COLUNAS] = { "B", "I", "N", "G", "O" };
  
-/* ---------------------------------------------------------------------------
- *  Estrutura que representa uma cartela (Desafio 3)
- * ------------------------------------------------------------------------ */
+/*  Estrutura que representa uma cartela (Desafio 3) */
 typedef struct
 {
     int numeros[LINHAS][COLUNAS];
 } Cartela;
  
-/* ---------------------------------------------------------------------------
- *  Prototipos das funcoes
- * ------------------------------------------------------------------------ */
+
 int  valorMinimoDaColuna(Coluna coluna);
 int  valorMaximoDaColuna(Coluna coluna);
 int  gerarNumero(int minimo, int maximo);
@@ -51,10 +45,7 @@ void imprimirCartela(int cartela[LINHAS][COLUNAS]);
 void imprimirTodasAsCartelas(Cartela cartelas[], int quantidade);
 int  lerQuantidadeDeCartelas(void);
  
-/* ---------------------------------------------------------------------------
- *  Faixa de valores de cada coluna:
- *      B -> 1..15   I -> 16..30   N -> 31..45   G -> 46..60   O -> 61..75
- * ------------------------------------------------------------------------ */
+
 int valorMinimoDaColuna(Coluna coluna)
 {
     return (int) coluna * NUMEROS_POR_COL + 1;
@@ -64,18 +55,13 @@ int valorMaximoDaColuna(Coluna coluna)
 {
     return (int) coluna * NUMEROS_POR_COL + NUMEROS_POR_COL;
 }
- 
-/* ---------------------------------------------------------------------------
- *  Sorteia um numero inteiro dentro do intervalo [minimo, maximo]
- * ------------------------------------------------------------------------ */
+
 int gerarNumero(int minimo, int maximo)
 {
     return minimo + rand() % (maximo - minimo + 1);
 }
  
-/* ---------------------------------------------------------------------------
- *  Retorna 1 se o numero ja existe na coluna informada, 0 caso contrario
- * ------------------------------------------------------------------------ */
+
 int numeroExiste(int cartela[LINHAS][COLUNAS], int coluna, int numero)
 {
     int linha;
@@ -91,26 +77,23 @@ int numeroExiste(int cartela[LINHAS][COLUNAS], int coluna, int numero)
     return 0;
 }
  
-/* ---------------------------------------------------------------------------
- *  Indica se a posicao e o espaco livre do centro da cartela
- * ------------------------------------------------------------------------ */
+
 int ehEspacoLivre(int linha, int coluna)
 {
     return (linha == LINHA_LIVRE && coluna == (int) COLUNA_N);
 }
  
-/* ---------------------------------------------------------------------------
- *  Desafio 4: ordena em ordem crescente os numeros de uma coluna.
- *  O espaco livre permanece no centro (ele nao participa da ordenacao).
- *  Utiliza um vetor auxiliar e o algoritmo de ordenacao por selecao.
- * ------------------------------------------------------------------------ */
+/*  Desafio 4: ordena em ordem crescente os numeros de uma coluna.  
+    O espaco livre permanece no centro (ele nao participa da ordenacao).
+    Utiliza um vetor auxiliar e o algoritmo de ordenacao por selecao.
+*/
 void ordenarColuna(int cartela[LINHAS][COLUNAS], int coluna)
 {
     int auxiliar[LINHAS];
     int quantidade = 0;
     int linha, i, j, menor, troca;
  
-    /* copia apenas os numeros sorteados para o vetor auxiliar */
+  
     for (linha = 0; linha < LINHAS; linha++)
     {
         if (!ehEspacoLivre(linha, coluna))
@@ -120,7 +103,7 @@ void ordenarColuna(int cartela[LINHAS][COLUNAS], int coluna)
         }
     }
  
-    /* ordenacao por selecao */
+
     for (i = 0; i < quantidade - 1; i++)
     {
         menor = i;
@@ -141,7 +124,7 @@ void ordenarColuna(int cartela[LINHAS][COLUNAS], int coluna)
         }
     }
  
-    /* devolve os numeros ordenados para a cartela */
+ 
     quantidade = 0;
  
     for (linha = 0; linha < LINHAS; linha++)
@@ -154,10 +137,7 @@ void ordenarColuna(int cartela[LINHAS][COLUNAS], int coluna)
     }
 }
  
-/* ---------------------------------------------------------------------------
- *  Preenche uma cartela respeitando a faixa de cada coluna e sem repetir
- *  numeros dentro da mesma coluna
- * ------------------------------------------------------------------------ */
+
 void gerarCartela(int cartela[LINHAS][COLUNAS])
 {
     Coluna coluna;
@@ -190,9 +170,8 @@ void gerarCartela(int cartela[LINHAS][COLUNAS])
     }
 }
  
-/* ---------------------------------------------------------------------------
- *  Desafio 5: compara duas cartelas posicao a posicao
- * ------------------------------------------------------------------------ */
+/*  Desafio 5: compara duas cartelas posicao a posicao
+ */
 int cartelasSaoIguais(int a[LINHAS][COLUNAS], int b[LINHAS][COLUNAS])
 {
     int linha, coluna;
@@ -211,9 +190,7 @@ int cartelasSaoIguais(int a[LINHAS][COLUNAS], int b[LINHAS][COLUNAS])
     return 1;
 }
  
-/* ---------------------------------------------------------------------------
- *  Gera uma nova cartela garantindo que ela seja diferente das anteriores
- * ------------------------------------------------------------------------ */
+
 void gerarCartelaUnica(Cartela cartelas[], int quantidadeJaGerada)
 {
     int tentativa, i, repetida;
@@ -243,9 +220,7 @@ void gerarCartelaUnica(Cartela cartelas[], int quantidadeJaGerada)
     printf("Aviso: nao foi possivel gerar uma cartela totalmente unica.\n");
 }
  
-/* ---------------------------------------------------------------------------
- *  Impressao
- * ------------------------------------------------------------------------ */
+
 void imprimirCabecalho(void)
 {
     Coluna coluna;
@@ -295,9 +270,9 @@ void imprimirTodasAsCartelas(Cartela cartelas[], int quantidade)
     printf("\n");
 }
  
-/* ---------------------------------------------------------------------------
- *  Desafio 1: leitura validada da quantidade de cartelas
- * ------------------------------------------------------------------------ */
+/*  Desafio 1: leitura validada da quantidade de cartelas
+*/
+
 int lerQuantidadeDeCartelas(void)
 {
     int quantidade = 0;
@@ -327,9 +302,6 @@ int lerQuantidadeDeCartelas(void)
     return quantidade;
 }
  
-/* ---------------------------------------------------------------------------
- *  Programa principal
- * ------------------------------------------------------------------------ */
 int main(void)
 {
     Cartela cartelas[MAX_CARTELAS];   /* vetor de cartelas (Desafios 2 e 3) */
